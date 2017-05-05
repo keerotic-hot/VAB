@@ -12,6 +12,7 @@ function VAB(className,isDebug,cssURL){
 	var _activeElements = [];
 	var _countIntval = 0;
 	var inspector = null;
+	var _hidden = false;
 
 	function _debug(... param){
 		if(isDebug) console.log.apply(console,param);
@@ -146,6 +147,25 @@ function VAB(className,isDebug,cssURL){
 	}
 
 	function _count(){
+
+		var hidden =
+		 document.hidden || 
+		 document.webkitHidden || 
+		 document.mozHidden || 
+		 document.msHidden || false;
+
+		 if(hidden) { 
+		 	if(_hidden!=hidden){
+		 		_hidden = hidden;
+			 	_debug('[ PAUSE COUNTING ] when Hidden : ',new Date());
+			 }
+		 	return;
+		 }
+		 if(_hidden!=hidden){
+	 		_hidden = hidden;
+		 	_debug('[ CONTINUE COUNTING ] when Visible : ',new Date());
+		 }
+
 		_activeElements.forEach(function(elm,i,all){
 			if(++elm.activeTime>=_viewDurationComplete){
 
